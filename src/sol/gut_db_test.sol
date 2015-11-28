@@ -1,5 +1,5 @@
 import 'dapple/test.sol';
-contract GUT_Test {
+contract GUT_Test is Test {
     GUT g;
     Tester t;
     function setUp() {

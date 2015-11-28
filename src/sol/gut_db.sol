@@ -18,6 +18,9 @@ contract GUT {
     }
     // lookup? resolve?
     function get(uint gut) returns (address owner, bool ok) {
+        return getController(gut);
+    }
+    function getController(uint gut) returns (address owner, bool ok) {
         return (controllers[gut], true);
     }
 }
