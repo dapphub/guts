@@ -1,48 +1,57 @@
 import 'dapple/test.sol';
-contract GUT_Test is Test {
-    GUT g;
+import 'guts.sol';
+import 'user.sol';
+
+contract GutsTest is Test, GutsUser(GutsUserLinkType(0x2)) {
     Tester t;
     function setUp() {
-        g = new GUT();
+        _guts = new Guts();
+        t = new Tester();
+        t._target(_guts);
     }
     function testClaimGas() logs_gas() {
-        g.claim();
+        _guts.claim();
     }
-    function testGetGas() logs_gas() {
-        g.get(0);
+    function testTryLookupGas() logs_gas() {
+        _guts.tryLookup(0);
+    }
+    function testLookupGas() logs_gas() {
+        _guts.lookup(0);
+    }
+    function testClaimAndTransferGas() logs_gas() {
+        _guts.claim();
+        _guts.transfer(1, address(0x1));
+    }
+    function testFailLookupTooBig() {
+        _guts.lookup(1);
     }
     function testGutStuff() {
-        var (owner, ok) = g.get(0);
+        var (owner, ok) = _guts.tryLookup(0);
         assertTrue( ok );
-        assertEq( owner, address(g) );
+        assertEq( owner, address(_guts), "wrong owner for 0" );
 
-        t = new Tester();
-        t._target(address(g));
 
-        GUT(t).claim();
-        (owner, ok) = g.get(1);
+        Guts(t).claim();
+        (owner, ok) = _guts.tryLookup(1);
         assertTrue( ok );
-        assertEq( owner, address(g) );
+        assertEq( owner, address(t), "wrong owner for first claimer" );
 
-        GUT(t).claim();
-        (owner, ok) = g.get(2);
+        Guts(t).claim();
+        (owner, ok) = _guts.tryLookup(2);
         assertTrue( ok );
-        assertEq( owner, address(g) );
+        assertEq( owner, address(t) );
 
-        t = new Tester();
-        t._target(address(g));
-
-        GUT(t).claim();
-        (owner, ok) = g.get(3);
+        Guts(t).claim();
+        (owner, ok) = _guts.tryLookup(3);
         assertTrue( ok );
-        assertEq( owner, address(g) );
+        assertEq( owner, address(t) );
 
-        (owner, ok) = g.get(4);
+        (owner, ok) = _guts.tryLookup(4);
         assertFalse( ok );
         assertEq( owner, address(0x0) );
-        GUT(t).claim();
-        (owner, ok) = g.get(4);
+        Guts(t).claim();
+        (owner, ok) = _guts.tryLookup(4);
         assertTrue( ok );
-        assertEq( owner, address(g) );
+        assertEq( owner, address(t) );
     }
 }
