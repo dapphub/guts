@@ -13,9 +13,9 @@ Giving a truly globally unique ID space a sliver of utility has hilarious conseq
 
 ### install
 
-dapple install --save guts 0.1.0
+`dapple install --save guts 0.1.0`
 
-### use
+### usage
 
     // Extend the base 
     import 'guts/user.sol';
