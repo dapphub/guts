@@ -11,9 +11,6 @@ Giving a truly globally unique ID space a sliver of utility has hilarious conseq
 
 ### 
 
-```
-GutsCoin is ERC20
-
 ### install
 
 dapple install --save guts 0.1.0
